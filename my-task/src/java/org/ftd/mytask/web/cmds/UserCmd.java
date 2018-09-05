@@ -236,8 +236,6 @@ public class UserCmd extends MVC implements ICmd {
         description.append(o.getName());
         description.append("\n");
         description.append("Empresa: ");
-        description.append(o.getId());
-        description.append(" - ");
         description.append(this.findCompany(o.getCompanyId()).getName());
         description.append("\n");
         description.append("E-mail: ");

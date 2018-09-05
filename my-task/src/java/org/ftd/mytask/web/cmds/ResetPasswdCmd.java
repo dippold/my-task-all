@@ -1,8 +1,7 @@
 package org.ftd.mytask.web.cmds;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
@@ -13,15 +12,14 @@ import org.ftd.educational.mytask.persistence.daos.UserDAO;
 import org.ftd.educational.mytask.persistence.entities.ConfigKey;
 import org.ftd.educational.mytask.persistence.entities.Passwd;
 import org.ftd.educational.mytask.persistence.entities.User;
+import org.ftd.mytask.web.adapters.ButtonDefinition;
+import org.ftd.mytask.web.adapters.FieldDefinition;
+import org.ftd.mytask.web.adapters.FormDefinition;
+import org.ftd.mytask.web.adapters.IdNameAdapter;
 import org.ftd.mytask.web.mvc.abstracts.MVC;
 import static org.ftd.mytask.web.mvc.abstracts.MVC.CMD_LOG_OUT;
 import static org.ftd.mytask.web.mvc.abstracts.MVC.MSG_INVALID_ACTION;
-import static org.ftd.mytask.web.mvc.abstracts.MVC.MVC_ACTION_ADDNEW;
-import static org.ftd.mytask.web.mvc.abstracts.MVC.MVC_ACTION_BUILD_ADD_MODEL;
-import static org.ftd.mytask.web.mvc.abstracts.MVC.MVC_ACTION_BUILD_GRID_MODEL;
 import static org.ftd.mytask.web.mvc.abstracts.MVC.MVC_ACTION_BUILD_UPD_MODEL;
-import static org.ftd.mytask.web.mvc.abstracts.MVC.MVC_ACTION_BUILD_VIEW_MODEL;
-import static org.ftd.mytask.web.mvc.abstracts.MVC.MVC_ACTION_DELETE;
 import static org.ftd.mytask.web.mvc.abstracts.MVC.MVC_ACTION_UPDATE;
 import static org.ftd.mytask.web.mvc.abstracts.MVC.PARAMETER_NAME_ACTION;
 import static org.ftd.mytask.web.mvc.abstracts.MVC.PARAMETER_NAME_CMD;
@@ -69,30 +67,56 @@ public class ResetPasswdCmd implements ICmd {
 
     }
 
-    public String buildUpdateModel(HttpServletRequest request, HttpServletResponse response) {        
+    public String buildUpdateModel(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("title", "Reset de senhas");
-        request.setAttribute("users", this.findAllUser(request));
-                
-        return "WEB-INF/views/ResetPasswdView.jsp";
+
+        final String formTitle = "Reset de senhas ";
+
+        final String urlToGo = MVC.URL_MVC_SERVICE
+                + "?" + MVC.PARAMETER_NAME_CMD
+                + "=" + this.getClass().getSimpleName()
+                + "&" + MVC.PARAMETER_NAME_ACTION
+                + "=" + MVC.MVC_ACTION_UPDATE;
+
+        final String urlToGoBack = MVC.URL_MVC_SERVICE
+                + "?" + MVC.PARAMETER_NAME_CMD
+                + "=" + MVC.CMD_HOME;
+
+        List<IdNameAdapter> users = this.findAllUser(request);
+
+        /*  HTML FIELD DEFINITIONS ... */
+        final List<FieldDefinition> fields = new ArrayList<>();
+        fields.add(new FieldDefinition(6, FieldDefinition.TYPE_COMBO, "userIdInput", "Usuário", "", users, "Selecione um grupo!", "required", "", 0, 0));
+
+        final List<ButtonDefinition> buttons = new ArrayList<>();
+        buttons.add(new ButtonDefinition(ButtonDefinition.TYPE_SUBMIT, "btnSubmit", "Salvar", "btn btn-outline-primary", ""));
+        buttons.add(new ButtonDefinition(ButtonDefinition.TYPE_SIMPLE, "btnCancel", "Cancelar", "btn btn-outline-success", urlToGoBack));
+
+        /* HTML FORM DEFINITIONS ...*/
+        final FormDefinition form = new FormDefinition(formTitle, "formUpdate", "POST", urlToGo, fields, buttons);
+
+        request.setAttribute("oForm", form);
+
+        return "WEB-INF/views/__OneColumnFormEngine.jsp";
     }
 
     public String doUpdate(HttpServletRequest request, HttpServletResponse response) {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(MVC.PERSISTENCE_UNIT);
-        Long id = Long.parseLong(MVC.readParameter(request, "id"));
+        Long id = Long.parseLong(MVC.readParameter(request, "userIdInput"));
 
         /* BUSCANDO O USUÁRIO */
         UserDAO userDAO = new UserDAO(factory);
         User user = userDAO.find(id);
 
-        /* BUSCANDO A SENHA PADRÃO */
-        ConfigKeyDAO cfgDAO = new ConfigKeyDAO(factory);
-        ConfigKey key = cfgDAO.findConfigKey(MVC.getUserCompanySessionId(request), "passwd.default");
-
-        /* CADASTRANDO A SENHA PADRÃO */
-        PasswdDAO passDAO = new PasswdDAO(factory);
-        Passwd passwd = passDAO.findByUser(id);
-        passwd.setName(key.getKeyValue());
         try {
+            /* BUSCANDO A SENHA PADRÃO */
+            ConfigKeyDAO cfgDAO = new ConfigKeyDAO(factory);
+            ConfigKey key = cfgDAO.findConfigKey(MVC.getUserCompanySessionId(request), "passwd.default");
+            
+            /* CADASTRANDO A SENHA PADRÃO */
+            PasswdDAO passDAO = new PasswdDAO(factory);
+            Passwd passwd = passDAO.findByUser(id);
+            passwd.setName(key.getKeyValue());
             passDAO.edit(passwd);
             request.setAttribute("msg", MVC.MSG_RESET_PASSWD_SUCESS + user.getName());
         } catch (Exception ex) {
@@ -103,14 +127,20 @@ public class ResetPasswdCmd implements ICmd {
                 + "?" + MVC.PARAMETER_NAME_CMD
                 + "=" + this.getClass().getSimpleName()
                 + "&" + MVC.PARAMETER_NAME_ACTION
-                + "=" + MVC.MVC_ACTION_BUILD_GRID_MODEL;
+                + "=" + MVC.MVC_ACTION_BUILD_UPD_MODEL;
     }
 
-    private List<User> findAllUser(HttpServletRequest request) {
+    private List<IdNameAdapter> findAllUser(HttpServletRequest request) {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(MVC.PERSISTENCE_UNIT);
         UserDAO dao = new UserDAO(factory);
+        List<User> users = dao.findAllByCompany(MVC.getUserCompanySessionId(request));
+        List<IdNameAdapter> datasource = new ArrayList<>();
 
-        return dao.findAllByCompany(MVC.getUserCompanySessionId(request));
+        users.forEach((o) -> {
+            datasource.add(new IdNameAdapter(o.getId(), o.getName()));
+        });
+
+        return datasource;
     }
 
 }

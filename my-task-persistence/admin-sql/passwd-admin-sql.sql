@@ -1,0 +1,1 @@
+SELECT * FROM taskmng.user inner join passwd on passwd.userId = user.id;

@@ -159,23 +159,36 @@
                     <i class="fas fa-cogs"></i>&nbsp;Config&nbsp;
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownConfig">
+                    
                     <a class="dropdown-item" href="mvc?class=ChangePasswdCmd&do=2">
                         <i class="fas fa-user-edit"></i>&nbsp;Mudar Senha
                     </a>
+                    
+                    <c:if test="${ruleId == '1'}">
+                        <a class="dropdown-item" href="mvc?class=ResetPasswdCmd&do=2">
+                            <i class="fas fa-user-check"></i>&nbsp;Resetar Senhas
+                        </a>
+                    </c:if>                    
+                    
                     <c:if test="${ruleId == '1' || ruleId == '2'}">
                         <a class="dropdown-item" href="mvc?class=UserCmd&do=0">
                             <i class="fas fa-users-cog"></i>&nbsp;Usuários
                         </a>
+                    </c:if>
+                    
+                   <c:if test="${ruleId == '1'}">
                         <a class="dropdown-item" href="mvc?class=ConfigKeyCmd&do=0">
                             <i class="fas fa-key"></i>&nbsp;Chaves
                         </a>
                         <a class="dropdown-item" href="mvc?class=LogCmd&do=0">
                             <i class="fas fa-user-check"></i>&nbsp;Logs
                         </a>
-                    </c:if>
+                    </c:if>                    
+                    
                     <a id="linkAbout" href="#" class="dropdown-item" data-toggle="modal" data-target="#about-modal" title="INF. SOBRE O SISTEMA">
                         <i class="fas fa-chalkboard-teacher"></i>&nbsp;Sobre o Sistema</a>
                     </a>
+                    
                 </div>
             </li><!-- /SUB-MENU CONFIG -->
 
