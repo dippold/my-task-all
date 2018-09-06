@@ -1,7 +1,7 @@
 <%-- 
     Document   : SignIn.jsp
     Created on : 17/05/2018, 10:01:43
-    Updated on : 13/06/2018, 13:06:00
+    Updated on : 06/09/2018, 13:06:00
     Author     : Fabio Tavares Dippold
 --%>
 
@@ -13,7 +13,7 @@
     <head>
         <!-- Required meta tags -->
         <meta http-equiv="Content-Language" content="pt-br">
-        <meta name="description" content="MyMoney App">
+        <meta name="description" content="FTD BuilderForce">
         <meta name="author" content="Fábio Tavares Dippold">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -63,24 +63,11 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>        
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-
         <script type="text/javascript" defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js" integrity="sha384-3LK/3kTpDE/Pkp8gTNp2gR/2gOiwQ6QaO7Td0zV76UFJVhqLl4Vl3KL1We6q6wR9" crossorigin="anonymous"></script>        
 
-
-
-        <!--
-        <script src="assets/core/js/jquery-3.3.1.slim.min.js"></script>
-        <script src="assets/core/js/bootbox.min.js"></script>
-        <script src="assets/core/js/popper.min.js"></script>
-        <script src="assets/core/js/bootstrap.min.js"></script>
-        -->
-
         <script type="text/javascript">
-
             $(document).ready(function () {
-
             });
-
         </script>
 
     </body>

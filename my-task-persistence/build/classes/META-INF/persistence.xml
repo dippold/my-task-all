@@ -19,11 +19,13 @@
     <class>org.ftd.educational.mytask.persistence.entities.Stakeholder</class>
     <class>org.ftd.educational.mytask.persistence.entities.BacklogItem</class>
     <class>org.ftd.educational.mytask.persistence.entities.Company</class>
+    <class>org.ftd.educational.mytask.persistence.entities.Menu</class>
+    <class>org.ftd.educational.mytask.persistence.entities.SubMenu</class>
     <properties>
-        <!--
+      <!--
         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/taskmng?zeroDateTimeBehavior=convertToNull"/>
         -->
-  <property name="javax.persistence.jdbc.url" value="jdbc:mysql://ftd-mysql.mysql.database.azure.com:3306/taskmng?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://ftd-mysql.mysql.database.azure.com:3306/taskmng?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="ftd@ftd-mysql"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.password" value="GalateoMenino2018#"/>

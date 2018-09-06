@@ -1,0 +1,1 @@
+SELECT * FROM taskmng.menu inner join submenu on submenu.menuId = menu.id inner join actionmvc on actionmvc.id = submenu.actionId;
