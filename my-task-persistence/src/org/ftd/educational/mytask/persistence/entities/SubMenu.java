@@ -1,11 +1,7 @@
 package org.ftd.educational.mytask.persistence.entities;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -44,6 +40,9 @@ public class SubMenu extends AbstractEntity {
     @Column(nullable = false, columnDefinition = "BIGINT(20)")
     private Long actionId = 1L;    
 
+    @Column(nullable = false, length = 45)  
+    private String icon;    
+    
     public Long getMenuId() {
         return menuId;
     }
@@ -83,5 +82,13 @@ public class SubMenu extends AbstractEntity {
     public void setActionId(Long actionId) {
         this.actionId = actionId;
     }
-            
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }    
+    
 }

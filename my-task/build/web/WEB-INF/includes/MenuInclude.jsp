@@ -68,92 +68,42 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
 
+            
+            <!-- MENU DINÂMICO -->
 
-            <!--
-            <li class="nav-item active">
-                <a class="nav-link" href="mvc?class=HomeCmd">Home <span class="sr-only">(current)</span></a>
-            </li>
-            -->
+            <c:forEach var="menu" items="${menus}">
 
-            <!--
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-            -->
-
-            <!-- SUB-MENU TAREFAS -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="dropdownTarefas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-tasks"></i>&nbsp;Tarefas&nbsp;
-                </a>
-                <div class="dropdown-menu" aria-labelledby="dropdownTarefas">
-                    <a class="dropdown-item" href="mvc?class=TimeSheetCmd&do=2">Apontar Horas</a>
-                    <a class="dropdown-item" href="mvc?class=TaskProgressCmd&do=0">Reportar Progresso</a>
-                    <c:if test="${ruleId == '1' || ruleId == '2'}">
-                        <a class="dropdown-item" href="mvc?class=TaskCmd&do=0">Planejar</a>
-                        <a class="dropdown-item" href="mvc?class=TaskTypeCmd&do=0">Tipos</a>
-                        <a class="dropdown-item" href="mvc?class=TaskStatusCmd&do=0">Status</a>                                               
-                    </c:if>                    
-                </div>
-            </li><!-- /SUB-MENU TAREFAS -->               
-
-            <!-- SUB-MENU SPRINT -->
-            <c:if test="${ruleId == '1' || ruleId == '2'}"> 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownSprint" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-people-carry"></i>&nbsp;Sprints&nbsp;
+                <!-- SUB-MENU ${menu.name} -->
+                
+                <li class="nav-item dropdown">                
+                    <a class="nav-link dropdown-toggle" id="dropdown${menu.name}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="${menu.icon}"></i>&nbsp;${menu.name}&nbsp;
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownSprint">
-                        <a class="dropdown-item" href="mvc?class=SprintCmd&do=0">Sprints</a>
-                        <a class="dropdown-item" href="mvc?class=SprintResourceCmd&do=0">Recursos</a>
-                        <a class="dropdown-item" href="mvc?class=SprintStatusCmd&do=0">Status</a>                      
-                    </div>
-                </li>
-            </c:if><!-- /SUB-MENU SPRINT -->             
+                    <div class="dropdown-menu" aria-labelledby="dropdown${menu.name}">
 
-            <!-- SUB-MENU PROJETOS -->
-            <c:if test="${ruleId == '1' || ruleId == '2'}">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownProjetos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-project-diagram"></i>&nbsp;Projetos&nbsp;
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownProjetos">                                            
-                        <a class="dropdown-item" href="mvc?class=ProjectCmd&do=0">Projetos</a>
-                        <a class="dropdown-item" href="mvc?class=ProjectGroupCmd&do=0">Grupos</a>
-                        <a class="dropdown-item" href="mvc?class=ProjectPhaseCmd&do=0">Fases</a>
-                        <a class="dropdown-item" href="mvc?class=ProjectStatusCmd&do=0">Status</a>
-                        <a class="dropdown-item" href="mvc?class=ProjectTypeCmd&do=0">Tipos</a>                         
-                    </div>
-                </li>
-            </c:if><!-- /SUB-MENU PROJETOS -->            
+                        <c:forEach var="subMenu" items="${subMenus}">
 
-            <!-- SUB-MENU ITENS DE BACKLOG -->
-            <c:if test="${ruleId == '1' || ruleId == '2'}">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownBacklog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-cubes"></i>&nbsp;Backlog&nbsp;
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownBacklog">
-                        <a class="dropdown-item" href="mvc?class=BacklogItemCmd&do=0">Administrar</a>
-                        <a class="dropdown-item" href="mvc?class=CompanyAreaCmd&do=0">Áreas</a>                         
-                    </div>
-                </li>
-            </c:if><!-- /SUB-MENU CADASTROS -->             
+                                <c:if test="${subMenu.menuId == menu.id}">
 
-            <!-- SUB-MENU STAKEHOLDERS -->
-            <c:if test="${ruleId == '1' || ruleId == '2'}">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownStakeholders" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-address-card"></i>&nbsp;Stakeholders&nbsp;
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownStakeholders">
-                        <a class="dropdown-item" href="mvc?class=StakeholderCmd&do=0">Administrar</a>
-                        <a class="dropdown-item" href="mvc?class=StakeholderGroupCmd&do=0">Grupos</a>                                      
+                                    <a class="dropdown-item" href="mvc?class=${subMenu.resource}&do=${subMenu.actionId}">
+                                        <i class="${subMenu.icon}"></i>&nbsp;${subMenu.name}
+                                    </a>
+
+                                </c:if>
+
+                        </c:forEach> 
+
                     </div>
-                </li>
-            </c:if><!-- /SUB-MENU STAKEHOLDERS -->             
+                </li><!-- /SUB-MENU ${menu.name} --> 
+
+
+            </c:forEach>            
+
+            <!-- /MENU DINÂMICO -->
+
 
             <!-- SUB-MENU CONFIG -->
+            <!--
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="dropdownConfig" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-cogs"></i>&nbsp;Config&nbsp;
@@ -185,15 +135,22 @@
                         </a>
                     </c:if>                    
 
-                    <a id="linkAbout" href="#" class="dropdown-item" data-toggle="modal" data-target="#about-modal" title="INF. SOBRE O SISTEMA">
-                        <i class="fas fa-chalkboard-teacher"></i>&nbsp;Sobre o Sistema</a>
-                    </a>
+
 
                 </div>
-            </li><!-- /SUB-MENU CONFIG -->
+            </li>
+            -->
+            <!-- /SUB-MENU CONFIG -->
 
             <!-- SAIR OPTION -->
             <li class="nav-item">
+                
+                <!--
+                <a id="linkAbout" href="#" class="dropdown-item" data-toggle="modal" data-target="#about-modal" title="INF. SOBRE O SISTEMA">
+                    <i class="fas fa-chalkboard-teacher"></i></a>
+                </a>
+                -->
+                
                 <a id="linkSair" href="#" class="nav-link" data-toggle="modal" data-target="#sair-modal" title="SAIR">
                     <i class="fas fa-power-off"></i>&nbsp;Sair
                 </a>                

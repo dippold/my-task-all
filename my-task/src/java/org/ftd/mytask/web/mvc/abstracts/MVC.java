@@ -1,10 +1,20 @@
 package org.ftd.mytask.web.mvc.abstracts;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.ftd.educational.mytask.persistence.daos.MenuDAO;
+import org.ftd.educational.mytask.persistence.daos.SubMenuDAO;
+import org.ftd.educational.mytask.persistence.daos.UserDAO;
+import org.ftd.educational.mytask.persistence.entities.Menu;
+import org.ftd.educational.mytask.persistence.entities.SubMenu;
 
 /**
  *
@@ -13,6 +23,7 @@ import javax.servlet.http.HttpSession;
  *
  */
 public abstract class MVC {
+
     public static final String APP_NAME = "MyTask";
 
     public static final String PERSISTENCE_UNIT = "my-task-PU";
@@ -55,21 +66,21 @@ public abstract class MVC {
     public static final String MSG_CRUD_UPDATE_FAILURE = "Editar o registro falhou!";
     public static final String MSG_CRUD_DELETE_SUCESS = "Registro deletado!";
     public static final String MSG_CRUD_DELETE_FAILURE = "Deletar o registro falhou!";
-    
+
     public static final String MSG_CHANGE_PASSWD_SUCESS = "Senha alterada com sucesso!";
     public static final String MSG_CHANGE_PASSWD_CURRENT_PASSWD_DONT_MACTH = "A senha atual não confere!";
     public static final String MSG_CHANGE_PASSWD_NEW_CHANGE_DONT_MATCH = "A nova senha é diferente da validação!";
     public static final String MSG_RESET_PASSWD_SUCESS = "Foi reinicializada do usuário ";
     public static final String MSG_RESET_PASSWD_FAILURE = "Falha na reinicializada da senha do usuário ";
-    
+
     public static final String KEY_NAME_DEFAULT_PASSWD = "default.passwd";
-    
+
     public static final String LOG_ACTION_SIGN_IN = "SignIn";
     public static final String LOG_ACTION_SIGN_OUT = "SignOut";
     public static final String LOG_ACTION_CREATE = "Create";
     public static final String LOG_ACTION_UPDATE = "Update";
     public static final String LOG_ACTION_DELETE = "Delete";
-    
+
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         final String action = readParameter(request, PARAMETER_NAME_ACTION, "");
         final String nextAction;
@@ -110,7 +121,7 @@ public abstract class MVC {
         }
 
         MVC.setDefaultAttributes(request);
-        
+
         return nextAction;
     }
 
@@ -120,8 +131,11 @@ public abstract class MVC {
         request.setAttribute("userName", MVC.getUserFirstNameSession(request));
         request.setAttribute("companyId", MVC.getUserCompanySessionId(request));
         request.setAttribute("ruleId", MVC.getUserRuleSessionId(request));
+        List<SubMenu> subMenus = MVC.getSubMenus(request);
+        request.setAttribute("menus", MVC.getMenus(subMenus));
+        request.setAttribute("subMenus", subMenus);
     }
-    
+
     public static String readParameter(HttpServletRequest req, String parameterName, String defaultValue) {
         String value = req.getParameter(parameterName);
         if ((value == null) || (value.equals(""))) {
@@ -200,7 +214,75 @@ public abstract class MVC {
         } else {
             return "";
         }
-        
-    }    
-    
+
+    }
+
+    public static boolean thereIsSimilar(String[] lstA, String[] lstB) {
+        boolean result = false;
+        for (String sA : lstA) {
+            for (String sB : lstB) {
+                if (sA.equals(sB)) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static boolean thereIs(String value, String[] values) {
+        boolean thereIs = false;
+        for (String s : values) {
+            if (s.equals(value) || s.equals("*")) {
+                thereIs = true;
+                break;
+            }
+        }
+
+        return thereIs;
+    }
+
+    public static String[] getArray(String values, String separator) {
+        return values.split(separator);
+    }
+
+    public static List<SubMenu> getSubMenus(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String ruleId = (String) session.getAttribute("ruleId");
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+        SubMenuDAO dao = new SubMenuDAO(factory);
+        List<SubMenu> subMenus = dao.findAll();
+
+        subMenus.stream().filter((o) -> (!thereIs(ruleId, MVC.getArray(o.getRuleIds(), ";")))).forEachOrdered((o) -> {
+            subMenus.remove(o);
+        });
+
+        return subMenus;
+    }
+
+    public static List<Menu> getMenus(List<SubMenu> subMenus) {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+        MenuDAO dao = new MenuDAO(factory);
+
+        List<Menu> menus = new ArrayList<>();
+        Long id = 0L;
+
+        for (int i = 0; i < subMenus.size(); i++) {
+            if (i == 0) {
+                id = subMenus.get(i).getMenuId();
+                menus.add(dao.find(id));
+            } else {
+                if (!Objects.equals(id, subMenus.get(i).getMenuId())) {
+                    id = subMenus.get(i).getMenuId();
+                    menus.add(dao.find(id));
+                }
+            }
+
+        }
+
+        return menus;
+    }
+
 }
