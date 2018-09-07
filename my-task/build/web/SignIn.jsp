@@ -44,13 +44,14 @@
 
             <button class="btn btn-lg btn-primary btn-block" type="submit">Autenticar</button>
 
-            <br>MyTask | Copyright 2018 <i class="fas fa-award"></i> <i class="fab fa-java"></i> 
-            <br>By FTD BuilderForce 
-
+            <br>
+            <i class="fas fa-project-diagram"></i>
+            Seja Bem-vindo ao App&nbsp;MyTask&nbsp;
+            <br>Powered By&nbsp;<i class="fas fa-award"></i>&nbsp;FTD BuilderForce
 
             <!-- DIV MENSAGEM -->
-            <c:if test="${!msg.equals('')}">
-                <br>${msg}
+            <c:if test="${not empty msg}">
+                <br>${msg}</div>
             </c:if><!-- /DIV MENSAGEM -->
 
         </form>
